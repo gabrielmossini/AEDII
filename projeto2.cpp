@@ -4,6 +4,7 @@
 //Alunos: RA (PK), nome, endereço, telefone, cidade, UF
 //1) Escreva funções específicas para a leitura dos dados das estruturas
 //2) Escreva uma função para permitir a inclusão e a exclusão de registros na tabela de alunos.
+//3) Escreva uma função para permitir a inclusão e a exclusão de registros na tabela de editoras.
 
 #include <iostream>
 #include <conio.h>
@@ -23,6 +24,7 @@ struct alunos {
        char cidade[25];
        char endereco[35];
        char telefone[11];
+       int status;
        };
 
 //leitura de dados dos Alunos
@@ -58,7 +60,7 @@ leitura_indice (struct indice idx[], int cont){
     }
 }
 
-//Inclusão de Registros
+//Inclusão de Registros na Tabela
 void inclusao (struct indice idx[], struct alunos als[], int &cont, int cod){
     cont++;
     // inclusao do novo registro na area de dados
@@ -73,7 +75,8 @@ void inclusao (struct indice idx[], struct alunos als[], int &cont, int cod){
     cin >> als[cont].uf;
     cout << "Telefone: ";
     cin >> als[cont].telefone;
-    // inclusao na area de indices
+
+// inclusao na area de indices
     int i;
     for (i = cont - 1; idx[i].codigo > cod; i--){
         idx[i+1].codigo = idx[i].codigo;
@@ -85,8 +88,8 @@ void inclusao (struct indice idx[], struct alunos als[], int &cont, int cod){
 }
 
 
-//busca aleatoria
-void buscaaleat (struct indice idx[], struct alunos als[], int &cont, int cod){
+//Inclusao de Registros na Tabela Alunos
+void inclusaoAlunos (struct indice idx[], struct alunos als[], int &cont, int cod){
     int i = 0, f = cont;
     int m = (i + f) / 2;
     for (; f >= i && cod != idx[m].codigo; m = (i + f) / 2){
@@ -96,7 +99,7 @@ void buscaaleat (struct indice idx[], struct alunos als[], int &cont, int cod){
             f = m - 1;
     }
     if (cod == idx[m].codigo){
-        cout << "\n\n Cliente ja Cadastrado - nao pode ser cadastrado novamente";
+        cout << "\t\n Cliente ja Cadastrado - nao pode ser cadastrado novamente";
         i = idx[m].ender;
         cout << "\nCodigo do Cliente: " << als[i].codigo;
         cout << "\tNome: " << als[i].nome;
@@ -104,13 +107,38 @@ void buscaaleat (struct indice idx[], struct alunos als[], int &cont, int cod){
         cout << "\tCidade: " << als[i].cidade;
         cout << "\tEndereco: " << als[i].endereco;
         cout << "\tTelefone: " << als[i].telefone;
+
     }
     else
         inclusao (idx, als, cont, cod);
+
+    if ((cod == idx[m].codigo) && als[i].status == 0){
+        als[i].status = 1;
+        cout << "\t\nCliente Excluido com Sucesso";
+    }
+    else
+        cout << "\t\nCliente nao cadastrado";
     getch();
 }
 
-
+// Exclusao de Alunos
+void exclusaoAlunos (struct indice idx[], struct alunos als[], int &cont, int cod){
+    int i = 0, f = cont;
+    int m = (i + f) / 2;
+    for (; f >= i && cod != idx[m].codigo; m = (i + f) / 2){
+        if (cod > idx[m].codigo)
+            i = m + 1;
+        else
+            f = m - 1;
+    }
+    if ((cod == idx[m].codigo) && als[i].status == 0){
+        als[i].status = 1;
+        cout << "\t\n Cliente Excluido com Sucesso";
+    }
+    else
+        cout << "\t\nCliente nao cadastrado";
+    getch();
+}
 
 int main(){
 
@@ -129,9 +157,9 @@ int main(){
 
         cout << "\n\n\tMenu";
         cout << "\n\t1. Leitura da Area de Dados";
-        cout << "\n\t2. Leitura da Area de Indice(Não sei se mantenho)";
-        cout << "\n\t3. Incluo de Registros";
-        cout << "\n\t4. Busca Aleatoria";
+        cout << "\n\t2. Leitura da Area de Indice";
+        cout << "\n\t3. Inclusao de Registros";
+        cout << "\n\t4. Exclusao de Registros";
         cout << "\n\t0. Sair";
 
         cout << "\n\n\tInsira uma Opcao: ";
@@ -162,18 +190,17 @@ int main(){
                 cout << "\n\nInforme o Codigo do Cliente a ser Incluido (0 para Sair): ";
                 cin >> codpesq;
                     if (codpesq != 0)
-                        buscaaleat (ind, dados, contador, codpesq);
+                        inclusaoAlunos (ind, dados, contador, codpesq);
                 }
                 break;
 
-            //Busca Aleatoria
             case 4:
                 system("cls");
                 for (int codpesq = 9; codpesq != 0;){
-                cout << "\n\nInforme o Codigo do Cliente a ser Buscado (0 para Sair): ";
+                cout << "\n\nInforme o Codigo do Cliente a ser Excluido (0 para Encerrar): ";
                 cin >> codpesq;
                     if (codpesq != 0)
-                        buscaaleat (ind, dados, contador, codpesq);
+                        exclusaoAlunos (ind, dados, contador, codpesq);
                 }
                 break;
 
